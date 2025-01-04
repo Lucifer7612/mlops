@@ -1,54 +1,4 @@
-<template>
-    <div class="min-h-screen bg-black text-white relative overflow-hidden">
-      <!-- Animated neural network background -->
-      <canvas ref="canvas" class="absolute inset-0 w-full h-full opacity-30"></canvas>
-  
-      <!-- Cursor follower -->
-      <div ref="cursor" class="cursor-follower"></div>
-  
-      <!-- Content -->
-      <div class="relative z-10">
-        <!-- Navigation -->
-        <nav class="px-6 py-4 flex items-center justify-between">
-          <div class="text-2xl font-bold">myva.ai</div>
-          <div class="flex items-center gap-4">
-            <button class="px-4 py-2 bg-transparent border border-white text-white rounded-md hover:bg-white hover:text-black transition-colors">
-              Login
-            </button>
-            <button class="px-4 py-2 bg-white text-black rounded-md hover:bg-gray-200 transition-colors">
-              Sign Up
-            </button>
-          </div>
-        </nav>
-  
-        <!-- Hero Section -->
-        <main class="flex flex-col items-center justify-center min-h-[80vh] px-4 text-center">
-          <div class="bg-white/5 backdrop-blur-sm px-6 py-2 rounded-full mb-6">
-            Optimized Testing for Complex LLMs
-          </div>
-          <h1 class="text-5xl md:text-7xl font-bold mb-8 max-w-4xl">
-            Test Your LLMs with Minimal Cost
-          </h1>
-          <button class="px-6 py-3 bg-white text-black rounded-md hover:bg-gray-200 transition-all transform hover:scale-105">
-            Upload Your Model
-          </button>
-  
-          <!-- AI/LLM Icon container -->
-          <div class="mt-16 relative">
-            <div class="w-32 h-32 bg-black border border-gray-800 rounded-2xl flex items-center justify-center relative glow-container">
-              <svg class="w-20 h-20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M2 17L12 22L22 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M2 12L12 17L22 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-          </div>
-        </main>
-      </div>
-    </div>
-  </template>
-  
-  <script setup>
+<script setup>
   import { onMounted, onUnmounted, ref } from 'vue'
   
   const canvas = ref(null)
@@ -102,13 +52,13 @@
       canvas.value.width / 2, canvas.value.height / 2, 0,
       canvas.value.width / 2, canvas.value.height / 2, canvas.value.width / 2
     )
-    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.3)')
+    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.4)')
     gradient.addColorStop(1, 'rgba(255, 255, 255, 0)')
     
     ctx.fillStyle = gradient
     ctx.fillRect(0, 0, canvas.value.width, canvas.value.height)
   
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)'
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)'
     ctx.lineWidth = 0.5
   
     neurons.forEach(neuron => {
@@ -116,7 +66,7 @@
   
       ctx.beginPath()
       ctx.arc(neuron.x, neuron.y, neuron.size, 0, Math.PI * 2)
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)'
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'
       ctx.fill()
   
       neurons.forEach(otherNeuron => {
@@ -159,11 +109,26 @@
       // Cursor effect
       const handleMouseMove = (e) => {
         if (cursor.value) {
-          cursor.value.style.left = `${e.clientX}px`
-          cursor.value.style.top = `${e.clientY}px`
+          cursor.value.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
         }
       }
+      const handleMouseEnter = () => {
+        if (cursor.value) {
+          cursor.value.classList.add('hovering');
+        }
+      }
+  
+      const handleMouseLeave = () => {
+        if (cursor.value) {
+          cursor.value.classList.remove('hovering');
+        }
+      }
+  
       window.addEventListener('mousemove', handleMouseMove)
+      document.querySelectorAll('button, a').forEach(el => {
+        el.addEventListener('mouseenter', handleMouseEnter);
+        el.addEventListener('mouseleave', handleMouseLeave);
+      });
     }
   })
   
@@ -173,10 +138,63 @@
     }
     window.removeEventListener('resize', handleResize)
     window.removeEventListener('mousemove', handleMouseMove)
+    document.querySelectorAll('button, a').forEach(el => {
+      el.removeEventListener('mouseenter', handleMouseEnter);
+      el.removeEventListener('mouseleave', handleMouseLeave);
+    });
   })
-  </script>
+</script>
+<template>
+    <div class="min-h-screen bg-black text-white relative overflow-hidden">
+      <!-- Animated neural network background -->
+      <canvas ref="canvas" class="absolute inset-0 w-full h-full opacity-40"></canvas>
   
-  <style scoped>
- 
-  </style>
+      <!-- Cursor follower -->
+      <div ref="cursor" class="cursor-follower"></div>
+  
+      <!-- Content -->
+      <div class="relative z-10">
+        <!-- Navigation -->
+        <nav class="px-6 py-4 flex items-center justify-between">    
+          <div class="flex justify-center item-center gap-1 ">
+            <div><img src="/l1.svg" class="size-12"></div>
+            <span class="text-2xl font-bold mt-1">mlops.ai</span>
+            </div>
+          <div class="flex items-center gap-4">
+            <button class="px-4 py-2 bg-transparent border border-white text-white rounded-md hover:bg-white hover:text-black transition-colors">
+              Login
+            </button>
+            <button class="px-4 py-2 bg-white text-black rounded-md hover:bg-gray-200 transition-colors">
+              Sign Up
+            </button>
+          </div>
+        </nav>
+  
+        <!-- Hero Section -->
+        <main class="flex flex-col items-center justify-center min-h-[80vh] px-4 text-center">
+          <div class="bg-white/5 backdrop-blur-sm px-6 py-2 rounded-full mb-6">
+            Optimized Testing for Complex LLMs
+          </div>
+          <div class=" text-5xl md:text-7xl font-bold mb-8 max-w-5xl">
+            Your Models - Our Platform<br>
+            <div class="mt-3">
+                Endless Possibilities
+            </div>
+          </div>
+          <button class="mt-8 px-6 py-3 bg-white text-black rounded-md hover:bg-gray-200 transition-all transform hover:scale-105">
+            Get Started
+          </button>
+  
+          <!-- AI/LLM Icon container -->
+          <div class="mt-8 relative">
+          <div class="w-32 h-32 bg-black border border-gray-800 rounded-2xl flex items-center justify-center relative glow-container">
+            <img src="/l1.svg" class="size-24">    
+          </div>
+        </div>
+        </main>
+      </div>
+    </div>
+  </template>
+  
+
   
