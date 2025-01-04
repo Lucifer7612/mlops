@@ -1,89 +1,182 @@
-<script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { ActivityIcon, UserIcon, RocketIcon } from 'lucide-vue-next'
-
-const mousePosition = ref({ x: 0, y: 0 })
-
-const backgroundStyle = computed(() => ({
-  background: `radial-gradient(circle at ${mousePosition.value.x}px ${mousePosition.value.y}px, rgba(59, 130, 246, 0.3) 0%, rgba(147, 51, 234, 0.1) 35%, transparent 70%)`,
-  transition: 'all 0.3s ease-out'
-}))
-
-const handleMouseMove = (event) => {
-  mousePosition.value = { x: event.clientX, y: event.clientY }
-}
-
-const handleDeploy = () => {
-  console.log('Deploying...')
-}
-
-onMounted(() => {
-  window.addEventListener('mousemove', handleMouseMove)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('mousemove', handleMouseMove)
-})
-</script>
-
 <template>
-  <div class="min-h-screen overflow-hidden bg-black text-white">
-    <!-- Animated background element -->
-    <div 
-      class="fixed inset-0 pointer-events-none"
-      :style="backgroundStyle"
-    ></div>
-
-    <!-- Content -->
-    <div class="relative z-10 backdrop-blur-sm">
-      <!-- Navbar -->
-      <nav class="border-b border-white/10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="flex justify-between h-16 items-center">
-            <!-- Logo -->
-            <div class="flex items-center">
-              <a href="/" class="flex items-center group">
-                <ActivityIcon class="h-8 w-8 text-blue-500 group-hover:text-blue-400 transition-colors" />
-                <span class="ml-2 text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500 group-hover:from-blue-400 group-hover:to-purple-400 transition-all">
-                  mlops.ai
-                </span>
-              </a>
-            </div>
-            <!-- Auth Buttons -->
-            <div class="flex items-center space-x-4">
-              <button class="text-white font-medium hover:text-blue-400 transition-colors flex items-center">
-                <UserIcon class="h-5 w-5 mr-1" />
-                Log in
-              </button>
-              <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">
-                Sign Up
-              </button>
+    <div class="min-h-screen bg-black text-white relative overflow-hidden">
+      <!-- Animated neural network background -->
+      <canvas ref="canvas" class="absolute inset-0 w-full h-full opacity-30"></canvas>
+  
+      <!-- Cursor follower -->
+      <div ref="cursor" class="cursor-follower"></div>
+  
+      <!-- Content -->
+      <div class="relative z-10">
+        <!-- Navigation -->
+        <nav class="px-6 py-4 flex items-center justify-between">
+          <div class="text-2xl font-bold">myva.ai</div>
+          <div class="flex items-center gap-4">
+            <button class="px-4 py-2 bg-transparent border border-white text-white rounded-md hover:bg-white hover:text-black transition-colors">
+              Login
+            </button>
+            <button class="px-4 py-2 bg-white text-black rounded-md hover:bg-gray-200 transition-colors">
+              Sign Up
+            </button>
+          </div>
+        </nav>
+  
+        <!-- Hero Section -->
+        <main class="flex flex-col items-center justify-center min-h-[80vh] px-4 text-center">
+          <div class="bg-white/5 backdrop-blur-sm px-6 py-2 rounded-full mb-6">
+            Optimized Testing for Complex LLMs
+          </div>
+          <h1 class="text-5xl md:text-7xl font-bold mb-8 max-w-4xl">
+            Test Your LLMs with Minimal Cost
+          </h1>
+          <button class="px-6 py-3 bg-white text-black rounded-md hover:bg-gray-200 transition-all transform hover:scale-105">
+            Upload Your Model
+          </button>
+  
+          <!-- AI/LLM Icon container -->
+          <div class="mt-16 relative">
+            <div class="w-32 h-32 bg-black border border-gray-800 rounded-2xl flex items-center justify-center relative glow-container">
+              <svg class="w-20 h-20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 17L12 22L22 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 12L12 17L22 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </div>
           </div>
-        </div>    
-      </nav>
-
-      <!-- Main Content with Deploy Button -->
-      <main class="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4">
-        <div class="text-center">
-          <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold mb-8 animate-fade-in-up">
-            Welcome to 
-            <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
-              mlops.ai
-            </span>
-          </h1>
-          <p class="text-xl sm:text-2xl text-gray-300 mb-12 max-w-2xl mx-auto animate-fade-in-up animation-delay-300">
-            Revolutionize your ML workflow with cutting-edge MLOps solutions
-          </p>
-          <button 
-            @click="handleDeploy"
-            class="group relative inline-flex items-center justify-center bg-blue-500 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-blue-600 transition-all duration-200 animate-fade-in-up animation-delay-600"
-          >
-            <RocketIcon class="h-5 w-5 mr-2 transition-transform group-hover:-translate-y-1" />
-            Launch Your ML Pipeline
-          </button>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
-  </div>
-</template>
+  </template>
+  
+  <script setup>
+  import { onMounted, onUnmounted, ref } from 'vue'
+  
+  const canvas = ref(null)
+  const cursor = ref(null)
+  let animationFrameId = null
+  let ctx = null
+  
+  class Neuron {
+    constructor(x, y) {
+      this.x = x
+      this.y = y
+      this.connections = []
+      this.size = Math.random() * 3 + 1
+      this.speed = Math.random() * 0.5 + 0.1
+      this.angle = Math.random() * Math.PI * 2
+    }
+  
+    update(width, height) {
+      this.x += Math.cos(this.angle) * this.speed
+      this.y += Math.sin(this.angle) * this.speed
+  
+      if (this.x < 0 || this.x > width) this.angle = Math.PI - this.angle
+      if (this.y < 0 || this.y > height) this.angle = -this.angle
+    }
+  }
+  
+  const initNeurons = (width, height) => {
+    const neurons = []
+    const numNeurons = 100
+    const centerX = width / 2
+    const centerY = height / 2
+  
+    for (let i = 0; i < numNeurons; i++) {
+      const angle = Math.random() * Math.PI * 2
+      const distance = Math.random() * (width / 2)
+      neurons.push(new Neuron(
+        centerX + Math.cos(angle) * distance,
+        centerY + Math.sin(angle) * distance
+      ))
+    }
+  
+    return neurons
+  }
+  
+  const animate = (neurons) => {
+    if (!ctx || !canvas.value) return
+  
+    ctx.clearRect(0, 0, canvas.value.width, canvas.value.height)
+    
+    const gradient = ctx.createRadialGradient(
+      canvas.value.width / 2, canvas.value.height / 2, 0,
+      canvas.value.width / 2, canvas.value.height / 2, canvas.value.width / 2
+    )
+    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.3)')
+    gradient.addColorStop(1, 'rgba(255, 255, 255, 0)')
+    
+    ctx.fillStyle = gradient
+    ctx.fillRect(0, 0, canvas.value.width, canvas.value.height)
+  
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)'
+    ctx.lineWidth = 0.5
+  
+    neurons.forEach(neuron => {
+      neuron.update(canvas.value.width, canvas.value.height)
+  
+      ctx.beginPath()
+      ctx.arc(neuron.x, neuron.y, neuron.size, 0, Math.PI * 2)
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)'
+      ctx.fill()
+  
+      neurons.forEach(otherNeuron => {
+        if (neuron !== otherNeuron) {
+          const dx = otherNeuron.x - neuron.x
+          const dy = otherNeuron.y - neuron.y
+          const distance = Math.sqrt(dx * dx + dy * dy)
+  
+          if (distance < 100) {
+            ctx.beginPath()
+            ctx.moveTo(neuron.x, neuron.y)
+            ctx.lineTo(otherNeuron.x, otherNeuron.y)
+            ctx.globalAlpha = 1 - distance / 100
+            ctx.stroke()
+          }
+        }
+      })
+    })
+  
+    animationFrameId = requestAnimationFrame(() => animate(neurons))
+  }
+  
+  onMounted(() => {
+    if (canvas.value) {
+      ctx = canvas.value.getContext('2d')
+      canvas.value.width = window.innerWidth
+      canvas.value.height = window.innerHeight
+  
+      const neurons = initNeurons(canvas.value.width, canvas.value.height)
+      animate(neurons)
+  
+      const handleResize = () => {
+        canvas.value.width = window.innerWidth
+        canvas.value.height = window.innerHeight
+        neurons.length = 0
+        neurons.push(...initNeurons(canvas.value.width, canvas.value.height))
+      }
+      window.addEventListener('resize', handleResize)
+  
+      // Cursor effect
+      const handleMouseMove = (e) => {
+        if (cursor.value) {
+          cursor.value.style.left = `${e.clientX}px`
+          cursor.value.style.top = `${e.clientY}px`
+        }
+      }
+      window.addEventListener('mousemove', handleMouseMove)
+    }
+  })
+  
+  onUnmounted(() => {
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId)
+    }
+    window.removeEventListener('resize', handleResize)
+    window.removeEventListener('mousemove', handleMouseMove)
+  })
+  </script>
+  
+  <style scoped>
+ 
+  </style>
+  
