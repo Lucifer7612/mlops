@@ -1,5 +1,6 @@
 <script setup>
-  import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
+import { RocketIcon } from 'lucide-vue-next'
   
   const canvas = ref(null)
   const cursor = ref(null)
@@ -25,7 +26,7 @@
     }
   }
   
-  const initNeurons = (width, height) => {
+const initNeurons = (width, height) => {
     const neurons = []
     const numNeurons = 100
     const centerX = width / 2
@@ -43,7 +44,7 @@
     return neurons
   }
   
-  const animate = (neurons) => {
+const animate = (neurons) => {
     if (!ctx || !canvas.value) return
   
     ctx.clearRect(0, 0, canvas.value.width, canvas.value.height)
@@ -89,7 +90,7 @@
     animationFrameId = requestAnimationFrame(() => animate(neurons))
   }
   
-  onMounted(() => {
+onMounted(() => {
     if (canvas.value) {
       ctx = canvas.value.getContext('2d')
       canvas.value.width = window.innerWidth
@@ -132,7 +133,7 @@
     }
   })
   
-  onUnmounted(() => {
+onUnmounted(() => {
     if (animationFrameId) {
       cancelAnimationFrame(animationFrameId)
     }
@@ -143,6 +144,9 @@
       el.removeEventListener('mouseleave', handleMouseLeave);
     });
   })
+const handleDeploy = () => {
+  console.log('Deploying...')
+}
 </script>
 <template>
     <div class="min-h-screen bg-black text-white relative overflow-hidden">
@@ -181,7 +185,11 @@
                 Endless Possibilities
             </div>
           </div>
-          <button class="mt-8 px-6 py-3 bg-white text-black rounded-md hover:bg-gray-200 transition-all transform hover:scale-105">
+          <button 
+            @click="handleDeploy"
+            class="group relative inline-flex items-center justify-center bg-blue-500 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-blue-600 transition-all duration-200 animate-fade-in-up animation-delay-600"
+          >
+            <RocketIcon class="h-5 w-5 mr-2 transition-transform group-hover:-translate-y-1" />
             Get Started
           </button>
   
