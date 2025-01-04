@@ -3,7 +3,6 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import { RocketIcon } from 'lucide-vue-next'
   
   const canvas = ref(null)
-  const cursor = ref(null)
   let animationFrameId = null
   let ctx = null
   
@@ -44,52 +43,47 @@ const initNeurons = (width, height) => {
     return neurons
   }
   
-const animate = (neurons) => {
-    if (!ctx || !canvas.value) return
-  
-    ctx.clearRect(0, 0, canvas.value.width, canvas.value.height)
+  const animate = (neurons) => {
+    if (!ctx || !canvas.value) return;
     
-    const gradient = ctx.createRadialGradient(
-      canvas.value.width / 2, canvas.value.height / 2, 0,
-      canvas.value.width / 2, canvas.value.height / 2, canvas.value.width / 2
-    )
-    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.4)')
-    gradient.addColorStop(1, 'rgba(255, 255, 255, 0)')
+    // Remove the radial gradient effect for the background
+    ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
     
-    ctx.fillStyle = gradient
-    ctx.fillRect(0, 0, canvas.value.width, canvas.value.height)
+    // Set a solid black background instead of a gradient
+    ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+    ctx.fillRect(0, 0, canvas.value.width, canvas.value.height);
   
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)'
-    ctx.lineWidth = 0.5
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+    ctx.lineWidth = 0.5;
   
     neurons.forEach(neuron => {
-      neuron.update(canvas.value.width, canvas.value.height)
+      neuron.update(canvas.value.width, canvas.value.height);
   
-      ctx.beginPath()
-      ctx.arc(neuron.x, neuron.y, neuron.size, 0, Math.PI * 2)
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'
-      ctx.fill()
+      ctx.beginPath();
+      ctx.arc(neuron.x, neuron.y, neuron.size, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+      ctx.fill();
   
       neurons.forEach(otherNeuron => {
         if (neuron !== otherNeuron) {
-          const dx = otherNeuron.x - neuron.x
-          const dy = otherNeuron.y - neuron.y
-          const distance = Math.sqrt(dx * dx + dy * dy)
+          const dx = otherNeuron.x - neuron.x;
+          const dy = otherNeuron.y - neuron.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
   
+          // Remove the glow effect by removing globalAlpha adjustment
           if (distance < 100) {
-            ctx.beginPath()
-            ctx.moveTo(neuron.x, neuron.y)
-            ctx.lineTo(otherNeuron.x, otherNeuron.y)
-            ctx.globalAlpha = 1 - distance / 100
-            ctx.stroke()
+            ctx.beginPath();
+            ctx.moveTo(neuron.x, neuron.y);
+            ctx.lineTo(otherNeuron.x, otherNeuron.y);
+            ctx.stroke();
           }
         }
-      })
-    })
+      });
+    });
   
-    animationFrameId = requestAnimationFrame(() => animate(neurons))
-  }
-  
+    animationFrameId = requestAnimationFrame(() => animate(neurons));
+}
+
 onMounted(() => {
     if (canvas.value) {
       ctx = canvas.value.getContext('2d')
@@ -106,30 +100,6 @@ onMounted(() => {
         neurons.push(...initNeurons(canvas.value.width, canvas.value.height))
       }
       window.addEventListener('resize', handleResize)
-  
-      // Cursor effect
-      const handleMouseMove = (e) => {
-        if (cursor.value) {
-          cursor.value.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-        }
-      }
-      const handleMouseEnter = () => {
-        if (cursor.value) {
-          cursor.value.classList.add('hovering');
-        }
-      }
-  
-      const handleMouseLeave = () => {
-        if (cursor.value) {
-          cursor.value.classList.remove('hovering');
-        }
-      }
-  
-      window.addEventListener('mousemove', handleMouseMove)
-      document.querySelectorAll('button, a').forEach(el => {
-        el.addEventListener('mouseenter', handleMouseEnter);
-        el.addEventListener('mouseleave', handleMouseLeave);
-      });
     }
   })
   
@@ -138,11 +108,6 @@ onUnmounted(() => {
       cancelAnimationFrame(animationFrameId)
     }
     window.removeEventListener('resize', handleResize)
-    window.removeEventListener('mousemove', handleMouseMove)
-    document.querySelectorAll('button, a').forEach(el => {
-      el.removeEventListener('mouseenter', handleMouseEnter);
-      el.removeEventListener('mouseleave', handleMouseLeave);
-    });
   })
 const handleDeploy = () => {
   console.log('Deploying...')
@@ -151,11 +116,7 @@ const handleDeploy = () => {
 <template>
     <div class="min-h-screen bg-black text-white relative overflow-hidden">
       <!-- Animated neural network background -->
-      <canvas ref="canvas" class="absolute inset-0 w-full h-full opacity-40"></canvas>
-  
-      <!-- Cursor follower -->
-      <div ref="cursor" class="cursor-follower"></div>
-  
+      <canvas ref="canvas" class="absolute inset-0 w-full h-full opacity-40"></canvas>  
       <!-- Content -->
       <div class="relative z-10">
         <!-- Navigation -->
@@ -193,8 +154,8 @@ const handleDeploy = () => {
   
           <!-- AI/LLM Icon container -->
           <div class="mt-8 relative">
-          <div class="w-32 h-32 bg-black border border-gray-800 rounded-2xl flex items-center justify-center relative glow-container">
-            <img src="/gpu.svg" class="mt-7">    
+          <div class="w-32 h-32 flex items-center justify-center relative">
+            <img src="/gpu.svg" class="">    
           </div>
         </div>
         </main>
