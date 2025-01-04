@@ -160,18 +160,16 @@ const handleDeploy = () => {
       <div class="relative z-10">
         <!-- Navigation -->
         <nav class="px-6 py-4 flex items-center justify-between">    
-          <div class="flex justify-center item-center gap-1 ">
-            <div><img src="/l1.svg" class="size-12"></div>
-            <span class="text-2xl font-bold mt-1">mlops.ai</span>
+          <div class="">
+            <span class="text-2xl font-bold mt-1">MLOPS</span>
             </div>
-          <div class="flex items-center gap-4">
-            <button class="px-4 py-2 bg-transparent border border-white text-white rounded-md hover:bg-white hover:text-black transition-colors">
-              Login
-            </button>
-            <button class="px-4 py-2 bg-white text-black rounded-md hover:bg-gray-200 transition-colors">
-              Sign Up
-            </button>
-          </div>
+            <button 
+            @click="handleDeploy"
+            class="group h-10 w-42 relative inline-flex items-center justify-center bg-white text-black px-4 py-3 rounded-lg text-lg font-medium"
+            >
+            <RocketIcon class="h-5 w-5 mr-2" />
+           <span>Get Started</span>
+          </button>
         </nav>
   
         <!-- Hero Section -->
@@ -187,16 +185,16 @@ const handleDeploy = () => {
           </div>
           <button 
             @click="handleDeploy"
-            class="group relative inline-flex items-center justify-center bg-blue-500 text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-blue-600 transition-all duration-200 animate-fade-in-up animation-delay-600"
+            class="group relative inline-flex items-center justify-center bg-white text-black px-6 py-3 rounded-lg text-lg font-medium"
           >
-            <RocketIcon class="h-5 w-5 mr-2 transition-transform group-hover:-translate-y-1" />
-            Get Started
+            <RocketIcon class="h-5 w-5 mr-2" />
+           <span> Get Started</span>
           </button>
   
           <!-- AI/LLM Icon container -->
           <div class="mt-8 relative">
           <div class="w-32 h-32 bg-black border border-gray-800 rounded-2xl flex items-center justify-center relative glow-container">
-            <img src="/l1.svg" class="size-24">    
+            <img src="/gpu.svg" class="mt-7">    
           </div>
         </div>
         </main>
